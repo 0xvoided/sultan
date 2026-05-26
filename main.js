@@ -38,8 +38,8 @@ function draw() {
     p.life -= p.decay;
     if (p.life <= 0 || p.y < -10) { particles[i] = makeParticle(); continue; }
     ctx.save();
-    ctx.globalAlpha = p.life * 0.18;
-    ctx.fillStyle = '#c8c4bc';
+    ctx.globalAlpha = p.life * 0.12;
+    ctx.fillStyle = '#3a3630';
     ctx.beginPath();
     ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
     ctx.fill();
@@ -99,7 +99,7 @@ function updateModernSlider(el) {
   const max = Number(el.max) || 100;
   const val = Number(el.value) || 0;
   const pct = (val - min) / (max - min) * 100;
-  el.style.background = `linear-gradient(90deg, #c8c4bc ${pct}%, rgba(200,196,188,0.1) ${pct}%)`;
+  el.style.background = `linear-gradient(90deg, #3a3630 ${pct}%, rgba(60,55,50,0.12) ${pct}%)`;
 }
 
 document.addEventListener("click", () => {
