@@ -10,18 +10,18 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 <style>
   :root {
-    --bg:          #16161a;
-    --bg2:         #1f1f24;
-    --card-bg:     rgba(28, 28, 33, 0.85);
-    --card-border: rgba(255, 255, 255, 0.08);
-    --card-strong: rgba(255, 255, 255, 0.15);
-    --text:        #e1e1e6;
-    --muted:       #8a8a93;
+    --bg:          #0b0b0d;
+    --bg2:         #111114;
+    --card-bg:     rgba(13, 13, 16, 0.92);
+    --card-border: rgba(255, 255, 255, 0.05);
+    --card-strong: rgba(255, 255, 255, 0.12);
+    --text:        #d1d1d6;
+    --muted:       #74747c;
     --bright:      #ffffff;
-    --silver:      #a1a1aa;
-    --accent:      #27272a;
-    --line:        rgba(255, 255, 255, 0.06);
-    --line-strong: rgba(255, 255, 255, 0.12);
+    --silver:      #919199;
+    --accent:  #1c1c1f;
+    --line:        rgba(255, 255, 255, 0.04);
+    --line-strong: rgba(255, 255, 255, 0.09);
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -41,14 +41,13 @@
     position: fixed;
     inset: 0;
     z-index: 0;
-    background:
-      linear-gradient(160deg, #18181c 0%, #0f0f12 100%);
+    background: linear-gradient(160deg, #0f0f12 0%, #08080a 100%);
   }
 
   .manga-screen {
     position: absolute;
     inset: 0;
-    opacity: 0.04;
+    opacity: 0.03;
     background-image:
       linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
       linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
@@ -58,7 +57,7 @@
   .halftone {
     position: absolute;
     inset: 0;
-    opacity: 0.03;
+    opacity: 0.02;
     background-image: radial-gradient(circle, #ffffff 1px, transparent 1px);
     background-size: 10px 10px;
   }
@@ -66,14 +65,14 @@
   .vignette {
     position: absolute;
     inset: 0;
-    background: radial-gradient(circle at 50% 40%, transparent 35%, rgba(0, 0, 0, 0.7) 100%);
+    background: radial-gradient(circle at 50% 40%, transparent 30%, rgba(0, 0, 0, 0.85) 100%);
   }
 
   .cursor-glow {
     position: fixed;
-    width: 200px; height: 200px;
+    width: 220px; height: 220px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.03) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.02) 0%, transparent 70%);
     pointer-events: none;
     transform: translate(-50%, -50%);
     z-index: 9997;
@@ -84,17 +83,17 @@
   .trail-dot {
     position: fixed;
     width: 5px; height: 5px;
-    background: rgba(255, 255, 255, 0.2);
-    box-shadow: 0 0 8px rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.16);
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.08);
     border-radius: 50%;
     pointer-events: none;
-    transform: translate(-50%,,-50%);
+    transform: translate(-50%, -50%);
     z-index: 9998;
     animation: trailFade 0.65s forwards;
   }
 
   @keyframes trailFade {
-    from { opacity: 0.7; scale: 1; }
+    from { opacity: 0.65; scale: 1; }
     to   { opacity: 0;   scale: 0.2; }
   }
 
@@ -103,6 +102,7 @@
     inset: 0;
     z-index: 1;
     pointer-events: none;
+    opacity: 0.8;
   }
 
   main { position: relative; z-index: 2; }
@@ -120,17 +120,17 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    opacity: 0.3;
+    opacity: 1;
   }
   .divider::before, .divider::after {
     content: '';
     flex: 1;
     height: 1px;
-    background: linear-gradient(90deg, transparent, var(--silver), transparent);
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
   }
   .divider-symbol {
     font-family: 'Cinzel', serif;
-    color: var(--silver);
+    color: #ffffff !important;
     font-size: 11px;
     font-weight: 700;
     letter-spacing: 3px;
@@ -141,10 +141,8 @@
     border: 1px solid var(--card-border);
     border-radius: 18px;
     padding: 2.2rem 2rem;
-    box-shadow:
-      0 0 60px rgba(0, 0, 0, 0.5),
-      inset 0 0 30px rgba(255, 255, 255, 0.02);
-    backdrop-filter: blur(14px);
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.7), inset 0 0 30px rgba(255, 255, 255, 0.01);
+    backdrop-filter: blur(16px);
     animation: cardEnter 0.9s forwards;
     text-align: center;
   }
@@ -164,7 +162,7 @@
     position: absolute;
     inset: -10px;
     border-radius: 50%;
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.11);
     animation: slowRotate 14s linear infinite;
   }
   .portrait-halo::after {
@@ -174,17 +172,18 @@
     width: 6px; height: 6px;
     background: var(--silver);
     border-radius: 50%;
-    box-shadow: 0 0 6px var(--silver);
+    box-shadow: 0 0 5px var(--silver);
   }
 
   .portrait-frame {
     width: 100%; height: 100%;
     border-radius: 50%;
-    overflow: hidden;
-    border: 1.5px solid rgba(255, 255, 255, 0.2);
-    filter: contrast(1.1) saturate(0) brightness(0.95);
+    position: relative;
+    border: 1.5px solid rgba(255, 255, 255, 0.15);
   }
-  .portrait-frame img { width: 100%; height: 100%; object-fit: cover; }
+  .portrait-frame img.avatar-img {
+    width: 100%; height: 100%; object-fit: cover; border-radius: 50%;
+  }
 
   @keyframes slowRotate { to { transform: rotate(360deg); } }
 
@@ -195,17 +194,15 @@
     letter-spacing: 0.16rem;
     margin-bottom: 0.3rem;
     color: var(--bright);
-    text-shadow:
-      0 0 10px rgba(255, 255, 255, 0.1),
-      0 0 28px rgba(255, 255, 255, 0.05);
+    text-shadow: 0 0 12px rgba(255, 255, 255, 0.09), 0 0 30px rgba(255, 255, 255, 0.03);
     animation: nameIn 1.2s ease forwards, nameFlicker 9s ease-in-out infinite;
   }
 
   @keyframes nameFlicker {
-    0%,100% { text-shadow: 0 0 10px rgba(255, 255, 255, 0.1), 0 0 28px rgba(255, 255, 255, 0.05); }
-    95% { text-shadow: 0 0 10px rgba(255, 255, 255, 0.1), 0 0 28px rgba(255, 255, 255, 0.05); }
-    96% { text-shadow: none; opacity: 0.88; }
-    97% { text-shadow: 0 0 10px rgba(255, 255, 255, 0.1), 0 0 28px rgba(255, 255, 255, 0.05); }
+    0%,100% { text-shadow: 0 0 12px rgba(255, 255, 255, 0.09), 0 0 30px rgba(255, 255, 255, 0.03); }
+    95% { text-shadow: 0 0 12px rgba(255, 255, 255, 0.09), 0 0 30px rgba(255, 255, 255, 0.03); }
+    96% { text-shadow: none; opacity: 0.86; }
+    97% { text-shadow: 0 0 12px rgba(255, 255, 255, 0.09), 0 0 30px rgba(255, 255, 255, 0.03); }
   }
 
   @keyframes nameIn {
@@ -227,18 +224,12 @@
   .bio-text {
     font-family: 'IM Fell English', serif;
     font-style: italic;
-    color: rgba(255,255,255,0.85);
+    color: rgba(255,255,255,0.78);
     font-size: 15px;
     line-height: 1.9;
     margin-bottom: 1.2rem;
     min-height: 1.9em;
   }
-  .bio-text::after {
-    content: '|';
-    animation: blink 1s step-end infinite;
-    color: var(--silver);
-  }
-  @keyframes blink { 50% { opacity: 0; } }
 
   .info-row {
     display: flex;
@@ -257,7 +248,7 @@
     font-weight: 700;
     color: var(--text);
     border: 1px solid var(--card-strong);
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(255, 255, 255, 0.02);
     border-radius: 999px;
     padding: 6px 15px;
     letter-spacing: 1px;
@@ -269,17 +260,9 @@
     border: 1px solid var(--card-border);
     border-radius: 18px;
     padding: 1.2rem 1.4rem;
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
     position: relative;
     overflow: hidden;
-  }
-
-  .audio-card::after {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
   }
 
   .audio-main {
@@ -298,7 +281,7 @@
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    background: rgba(255, 255, 255, 0.02);
+    background: rgba(255, 255, 255, 0.01);
   }
 
   .audio-vinyl { font-size: 18px; color: var(--silver); }
@@ -335,7 +318,7 @@
     width: 44px; height: 44px;
     border-radius: 12px;
     border: 1px solid var(--card-strong);
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.03);
     color: var(--bright);
     font-size: 14px;
     cursor: pointer;
@@ -346,7 +329,7 @@
     flex-shrink: 0;
   }
   .play-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.07);
     transform: translateY(-1px);
   }
 
@@ -367,16 +350,16 @@
     width: 100%;
     height: 4px;
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.07);
     outline: none;
     cursor: pointer;
   }
   input[type=range].modern-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
-    width: 13px; height: 13px;
+    width: 12px; height: 12px;
     border-radius: 50%;
     background: var(--bright);
-    border: 2px solid rgba(30, 30, 35, 0.8);
+    border: 2px solid rgba(20, 20, 25, 0.9);
     cursor: pointer;
   }
 
@@ -387,7 +370,6 @@
     gap: 0.65rem;
   }
   .volume-wrap i { color: var(--silver); font-size: 13px; text-align: center; }
-  input[type=range].vol-slider { width: 100%; }
 
   .section-title {
     font-family: 'Cinzel', serif;
@@ -427,12 +409,14 @@
     font-family: 'Share Tech Mono', monospace;
     font-size: 14px;
     font-weight: 700;
-    transition: all 0.22s;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.4s, background-color 0.4s;
   }
   .social-link:hover {
-    border-color: var(--card-strong);
+    border-color: rgba(255, 255, 255, 0.15);
     background: rgba(255, 255, 255, 0.03);
-    transform: translateY(-2px);
+    transform: scale(1.02) translateY(-1px);
   }
   .social-link i {
     font-size: 19px;
@@ -440,9 +424,10 @@
     width: 22px;
     text-align: center;
     flex-shrink: 0;
-    transition: color 0.2s;
+    transition: color 0.3s, transform 0.3s;
   }
-  .social-link:hover i { color: var(--bright); }
+  .social-link:hover i { color: var(--bright); transform: scale(1.08); }
+  .social-link .link-text { display: flex; flex-direction: column; }
   .social-link .link-label {
     font-size: 10px;
     font-weight: 700;
@@ -466,12 +451,14 @@
     text-decoration: none;
     color: inherit;
     display: block;
-    transition: all 0.22s;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.4s, background-color 0.4s;
   }
   .tool-card:hover {
-    border-color: var(--card-strong);
+    border-color: rgba(255, 255, 255, 0.15);
     background: rgba(255, 255, 255, 0.03);
-    transform: translateY(-2px);
+    transform: scale(1.02) translateY(-1px);
   }
 
   .tool-icon {
@@ -479,8 +466,9 @@
     color: var(--silver);
     margin-bottom: 9px;
     display: block;
-    transition: color 0.2s;
+    transition: color 0.3s, transform 0.3s;
   }
+  .tool-card:hover .tool-icon { color: var(--bright); transform: scale(1.08); }
   .tool-name {
     font-family: 'Cinzel', serif;
     font-size: 14px;
@@ -507,7 +495,106 @@
     padding: 3px 10px;
     margin-top: 10px;
     text-transform: none;
-    background: rgba(255, 255, 255, 0.04);
+    background: rgba(255, 255, 255, 0.02);
+  }
+
+  .discord-card {
+    background: #000000 !important;
+    border: 1px solid var(--card-border);
+    border-radius: 18px;
+    padding: 1.2rem 1.4rem;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.4s;
+  }
+  .discord-card:hover {
+    border-color: rgba(255, 255, 255, 0.12);
+    transform: scale(1.015);
+  }
+  .discord-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+  }
+  .discord-avatar-wrapper {
+    position: relative;
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+  }
+  .discord-avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+  }
+  .discord-user-info {
+    flex: 1;
+    min-width: 0;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .discord-name-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .discord-username {
+    font-family: 'Cinzel', serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--bright);
+  }
+  .discord-badges {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .discord-badge-img {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+  }
+  .discord-status-text {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+  .status-dot {
+    position: absolute;
+    bottom: -1px;
+    right: -1px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid #000000;
+    z-index: 4;
+  }
+  .status-dot.online { background-color: #219653; }
+  .status-dot.idle { background-color: #df9e21; }
+  .status-dot.dnd { background-color: #eb3b40; }
+  .status-dot.offline { background-color: #72767d; }
+  .discord-body {
+    margin-top: 12px;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .discord-activity, .discord-listening {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--silver);
+    background: rgba(255, 255, 255, 0.02);
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.04);
   }
 
   .footer {
@@ -516,10 +603,11 @@
     font-size: 10px;
     font-weight: 700;
     letter-spacing: 3px;
-    color: var(--muted);
+    color: #ffffff !important;
     border-top: 1px solid var(--line);
     padding-top: 20px;
     margin-top: 8px;
+    opacity: 1;
   }
 
   .header { text-align: center; }
@@ -531,7 +619,7 @@
 </head>
 <body>
 
-<div class="cursor-glow"></div>
+<div class="cursor-glow" id="cursorGlow"></div>
 <canvas id="emberField"></canvas>
 
 <div class="page-bg">
@@ -548,17 +636,15 @@
       <div class="portrait-wrap">
         <div class="portrait-halo"></div>
         <div class="portrait-frame">
-          <img id="avatarImg" src="firstavatar.png" alt="Avatar"
-            onerror="this.style.display='none'; this.parentElement.style.background='#27272a'; this.parentElement.innerHTML+='<span style=\'position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:Cinzel Decorative,cursive;font-size:40px;color:#a1a1aa;\'>S</span>'" />
+          <img id="avatarImg" src="firstavatar.png" alt="Avatar" class="avatar-img" />
         </div>
       </div>
 
       <div class="name-block">
         <div class="name-main">SyntaxError</div>
-        <div class="name-sub">We're nothing alike, you little stalker</div>
+        <div class="name-sub"></div>
       </div>
 
-      <p class="bio-text" id="bioText"></p>
 
       <div class="info-row">
         <div class="info-tag"><i class="fa fa-calendar-alt"></i><span>8 / 11</span></div>
@@ -567,7 +653,31 @@
     </div>
   </header>
 
-  <div class="divider"><span class="divider-symbol">/ /</span></div>
+  <div class="divider"><span class="divider-symbol">My discord stats </span></div>
+
+  <section>
+    <div class="discord-card" id="discordBlock">
+      <div class="discord-header">
+        <div class="discord-avatar-wrapper">
+          <img class="discord-avatar" id="discordMiniAvatar" src="firstavatar.png" alt="Discord Avatar" />
+          <span class="status-dot offline" id="statusDot"></span>
+        </div>
+        <div class="discord-user-info">
+          <div class="discord-name-row">
+            <span class="discord-username" id="discordUsername">Loading...</span>
+            <div class="discord-badges" id="discordBadges"></div>
+          </div>
+          <span class="discord-status-text" id="discordStatusText">Offline</span>
+        </div>
+      </div>
+      <div class="discord-body">
+        <div class="discord-activity" id="discordActivity" style="display: none;"></div>
+        <div class="discord-listening" id="discordListening" style="display: none;"></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"><span class="divider-symbol"> We're nothing alike, you little stalker </span></div>
 
   <section>
     <p class="section-title">Soundtrack</p>
@@ -577,9 +687,9 @@
           <i class="fa fa-compact-disc audio-vinyl" id="recordSymbol"></i>
         </div>
         <div class="audio-info">
-          <div class="audio-label">🎶 Now Playing</div>
-          <div class="audio-title">Back To Strangers</div>
-          <div class="audio-artist">Rehash</div>
+          <div class="audio-label">Now Playing</div>
+          <div class="audio-title" id="audioTitle">WILDFLOWER</div>
+          <div class="audio-artist" id="audioArtist">Billie Eilish</div>
         </div>
         <button class="play-btn" id="audioToggle">
           <i class="fa fa-play" id="audioSymbol"></i>
@@ -587,18 +697,18 @@
       </div>
       <div class="progress-wrap">
         <span id="audioNow">0:00</span>
-        <input type="range" class="modern-slider" id="audioBar" min="0" max="400" value="0" />
-        <span id="audioLength">4:05</span>
+        <input type="range" class="modern-slider" id="audioBar" min="0" value="0" step="1" />
+        <span id="audioLength">0:00</span>
       </div>
       <div class="volume-wrap">
         <i id="soundSymbol" class="fa-solid fa-volume-low"></i>
-        <input type="range" class="modern-slider vol-slider" id="soundBar" min="0" max="1" step="0.01" value="0.7" />
+        <input type="range" class="modern-slider vol-slider" id="soundBar" min="0" max="1" step="0.01" value="0.5" />
       </div>
     </div>
-    <audio id="siteTrack" src="song.mp3" preload="auto"></audio>
+    <audio id="siteTrack" src="song.mp3" preload="auto" loop></audio>
   </section>
 
-  <div class="divider"><span class="divider-symbol">/ /</span></div>
+  <div class="divider"><span class="divider-symbol">My Social</span></div>
 
   <section>
     <p class="section-title">Connections</p>
@@ -622,7 +732,7 @@
     </div>
   </section>
 
-  <div class="divider"><span class="divider-symbol">/ /</span></div>
+  <div class="divider"><span class="divider-symbol">My Stuff</span></div>
 
   <section>
     <p class="section-title">My tools</p>
@@ -649,6 +759,6 @@
 </div>
 </main>
 
-<script src="main.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
