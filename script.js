@@ -15,7 +15,13 @@ const BADGE_MAP = {
   ACTIVE_DEVELOPER:         'https://raw.githubusercontent.com/m66n/discord-badges/main/svg/DiscordActiveDeveloper.svg',
   NITRO:                    'https://raw.githubusercontent.com/m66n/discord-badges/main/svg/NitroSubscriber.svg',
 };
-
+const BADGE_NAMES = {
+  STAFF:'Discord Staff', PARTNER:'Partner', HYPESQUAD:'HypeSquad Events',
+  BUG_HUNTER_LEVEL_1:'Bug Hunter', HYPESQUAD_ONLINE_HOUSE_1:'HypeSquad Bravery',
+  HYPESQUAD_ONLINE_HOUSE_2:'HypeSquad Brilliance', HYPESQUAD_ONLINE_HOUSE_3:'HypeSquad Balance',
+  PREMIUM_EARLY_SUPPORTER:'Early Supporter', BUG_HUNTER_LEVEL_2:'Bug Hunter Gold',
+  ACTIVE_DEVELOPER:'Active Developer', NITRO:'Nitro',
+};
 let musicUnlocked = false;
 const audio        = document.getElementById('siteTrack');
 const audioToggle  = document.getElementById('audioToggle');
@@ -31,84 +37,12 @@ const cursorGlow   = document.getElementById('cursorGlow');
 let lanyardWs = null;
 let lanyardHb = null;
 
-function extractColor(img) {
-  try {
-    const c = document.createElement('canvas');
-    c.width = 40; c.height = 40;
-    const ctx = c.getContext('2d');
-    ctx.drawImage(img, 0, 0, 40, 40);
-    const d = ctx.getImageData(0, 0, 40, 40).data;
-    let rS=0, gS=0, bS=0, n=0;
-    for (let i=0; i<d.length; i+=4) {
-      const r=d[i], g=d[i+1], b=d[i+2], a=d[i+3];
-      if (a < 80) continue;
-      const lum = (r+g+b)/3;
-      if (lum < 18 || lum > 230) continue;
-      rS+=r; gS+=g; bS+=b; n++;
-    }
-    if (!n) return null;
-    return { r:Math.round(rS/n), g:Math.round(gS/n), b:Math.round(bS/n) };
-  } catch(e) { return null; }
-}
-
-function applyTheme(r, g, b) {
-  const lum = (r+g+b)/3;
-  const sat = Math.max(r,g,b) - Math.min(r,g,b);
-  if (lum > 195 || sat < 14) { r=145; g=145; b=153; }
-
-  const avg = (r+g+b)/3;
-  const boost = 1.6;
-  r = Math.min(255, Math.round(avg + (r-avg)*boost));
-  g = Math.min(255, Math.round(avg + (g-avg)*boost));
-  b = Math.min(255, Math.round(avg + (b-avg)*boost));
-
-  const tR = Math.min(255, r+80);
-  const tG = Math.min(255, g+80);
-  const tB = Math.min(255, b+80);
-
-  const root = document.documentElement;
-  root.style.setProperty('--ac',       `${r}, ${g}, ${b}`);
-  root.style.setProperty('--ac-color', `rgb(${r},${g},${b})`);
-  root.style.setProperty('--ac-dim',   `rgba(${r},${g},${b},0.18)`);
-  root.style.setProperty('--ac-dim2',  `rgba(${r},${g},${b},0.07)`);
-  root.style.setProperty('--ac-text',  `rgb(${tR},${tG},${tB})`);
-  root.style.setProperty('--ac-glow',  `rgba(${r},${g},${b},0.28)`);
-  root.style.setProperty('--ac-border',`rgba(${r},${g},${b},0.42)`);
-
-  const dynBg = document.getElementById('dynBgBlur');
-  if (dynBg) {
-    dynBg.style.background = `radial-gradient(ellipse at 40% 20%, rgba(${r},${g},${b},0.22) 0%, transparent 70%)`;
-    dynBg.style.opacity = '1';
-  }
-
-  const banner = document.getElementById('bannerBlur');
-  if (banner) {
-    banner.style.background = `linear-gradient(135deg, rgba(${r},${g},${b},0.5) 0%, rgba(${r},${g},${b},0.15) 100%)`;
-    banner.style.opacity = '1';
-  }
-
-  window._emberRGB = { r, g, b };
-}
-
-function loadAvatarWithTheme(url, imgEl) {
-  const tmp = new Image();
-  tmp.crossOrigin = 'anonymous';
-  tmp.onload = () => {
-    imgEl.src = url;
-    const col = extractColor(tmp);
-    if (col) applyTheme(col.r, col.g, col.b);
-
-    const banner = document.getElementById('bannerBlur');
-    if (banner) {
-      banner.style.backgroundImage = `url('${url}')`;
-    }
-    const dynBg = document.getElementById('dynBgBlur');
-    if (dynBg) {
-      dynBg.style.backgroundImage = `url('${url}')`;
-    }
-  };
-  tmp.onerror = () => { imgEl.src = url; };
-  tmp.src = url;
+function showToast(msg) {
+  const t = document.getElementById('copyToast');
+  if (!t) return;
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 1800);
 }
 
 function renderDiscord(data) {
@@ -117,33 +51,28 @@ function renderDiscord(data) {
   const user       = data.discord_user;
   const status     = data.discord_status;
   const activities = data.activities || [];
-
-  const hash   = user.avatar;
-  const isAnim = hash && hash.startsWith('a_');
-  const ext    = isAnim ? 'gif' : 'png';
-  const avatarUrl = hash
-    ? `https://cdn.discordapp.com/avatars/${user.id}/${hash}.${ext}?size=256`
-    : 'firstavatar.png';
-
-  const avatarImg = document.getElementById('avatarImg');
-  if (avatarImg) loadAvatarWithTheme(avatarUrl, avatarImg);
-
-  const unEl = document.getElementById('discordUsername');
-  if (unEl) unEl.textContent = user.global_name || user.username;
-
+  const realTag = user.global_name || user.username;
+  const tagEl = document.getElementById('discordTagText');
+  if (tagEl) tagEl.textContent = realTag;
+  const copyBtn = document.getElementById('discordTagCopy');
+  if (copyBtn) {
+    copyBtn.onclick = () => {
+      navigator.clipboard.writeText(realTag).then(() => showToast('copied to clipboard')).catch(() => {});
+    };
+  }
   const dot = document.getElementById('statusDot');
   if (dot) dot.className = `status-dot-inline ${status || 'offline'}`;
 
   const stEl = document.getElementById('discordStatusText');
-  const statusMap = { online:'Online', idle:'Idle', dnd:'Do Not Disturb', offline:'Offline' };
+  const statusMap = { online:'online', idle:'idle', dnd:'do not disturb', offline:'offline' };
   const customStatus = activities.find(a => a.type === 4);
   if (stEl) {
-    let txt = statusMap[status] || 'Offline';
+    let txt = statusMap[status] || 'offline';
     if (customStatus) {
       let cs = '';
       if (customStatus.emoji?.id) {
         const eExt = customStatus.emoji.animated ? 'gif' : 'png';
-        cs += `<img src="https://cdn.discordapp.com/emojis/${customStatus.emoji.id}.${eExt}" style="width:14px;height:14px;vertical-align:middle;margin-right:4px;" />`;
+        cs += `<img src="https://cdn.discordapp.com/emojis/${customStatus.emoji.id}.${eExt}" style="width:13px;height:13px;vertical-align:middle;margin-right:4px;" />`;
       } else if (customStatus.emoji?.name) {
         cs += customStatus.emoji.name + ' ';
       }
@@ -152,66 +81,55 @@ function renderDiscord(data) {
     }
     stEl.innerHTML = txt;
   }
-
   const badgesEl = document.getElementById('discordBadges');
   if (badgesEl) {
     badgesEl.innerHTML = '';
     const flags = user.public_flags || 0;
     const pairs = [
-      [1,      BADGE_MAP.STAFF],
-      [2,      BADGE_MAP.PARTNER],
-      [4,      BADGE_MAP.HYPESQUAD],
-      [8,      BADGE_MAP.BUG_HUNTER_LEVEL_1],
-      [64,     BADGE_MAP.HYPESQUAD_ONLINE_HOUSE_1],
-      [128,    BADGE_MAP.HYPESQUAD_ONLINE_HOUSE_2],
-      [256,    BADGE_MAP.HYPESQUAD_ONLINE_HOUSE_3],
-      [512,    BADGE_MAP.PREMIUM_EARLY_SUPPORTER],
-      [16384,  BADGE_MAP.BUG_HUNTER_LEVEL_2],
-      [131072, BADGE_MAP.ACTIVE_DEVELOPER],
+      [1,      'STAFF'],
+      [2,      'PARTNER'],
+      [4,      'HYPESQUAD'],
+      [8,      'BUG_HUNTER_LEVEL_1'],
+      [64,     'HYPESQUAD_ONLINE_HOUSE_1'],
+      [128,    'HYPESQUAD_ONLINE_HOUSE_2'],
+      [256,    'HYPESQUAD_ONLINE_HOUSE_3'],
+      [512,    'PREMIUM_EARLY_SUPPORTER'],
+      [16384,  'BUG_HUNTER_LEVEL_2'],
+      [131072, 'ACTIVE_DEVELOPER'],
     ];
-    pairs.forEach(([flag, url]) => {
+    pairs.forEach(([flag, key]) => {
       if (!(flags & flag)) return;
-      const img = document.createElement('img');
-      img.src = url; img.className = 'discord-badge-img';
-      badgesEl.appendChild(img);
+      const wrap = document.createElement('div'); wrap.className = 'badge-wrap';
+      const img = document.createElement('img'); img.src = BADGE_MAP[key]; img.className = 'discord-badge-img';
+      const tip = document.createElement('span'); tip.className = 'badge-tooltip'; tip.textContent = BADGE_NAMES[key];
+      wrap.appendChild(img); wrap.appendChild(tip); badgesEl.appendChild(wrap);
     });
-
     if (user.premium_type && user.premium_type > 0) {
-      const img = document.createElement('img');
-      img.src = BADGE_MAP.NITRO; img.className = 'discord-badge-img';
-      badgesEl.appendChild(img);
+      const wrap = document.createElement('div'); wrap.className = 'badge-wrap';
+      const img = document.createElement('img'); img.src = BADGE_MAP.NITRO; img.className = 'discord-badge-img';
+      const tip = document.createElement('span'); tip.className = 'badge-tooltip'; tip.textContent = 'Nitro';
+      wrap.appendChild(img); wrap.appendChild(tip); badgesEl.appendChild(wrap);
     }
   }
+  const rowGame    = document.getElementById('rowGame');
+  const gameText   = document.getElementById('gameText');
+  const rowSpotify = document.getElementById('rowSpotify');
+  const spotifyText= document.getElementById('spotifyText');
 
-  const actEl = document.getElementById('discordActivities');
-  if (actEl) {
-    actEl.innerHTML = '';
+  const game = activities.find(a => a.type === 0);
+  if (game && rowGame && gameText) {
+    gameText.textContent = game.details ? `${game.name} — ${game.details}` : game.name;
+    rowGame.style.display = 'flex';
+  } else if (rowGame) {
+    rowGame.style.display = 'none';
+  }
 
-    const spotify = activities.find(a => a.name === 'Spotify' || a.id === 'spotify:1');
-    if (spotify) {
-      const pill = document.createElement('div');
-      pill.className = 'activity-pill';
-      pill.innerHTML = `
-        <i class="fab fa-spotify spotify-icon"></i>
-        <div class="act-detail">
-          <span class="act-title">${spotify.details || 'Unknown'}</span>
-          <span class="act-sub">by ${spotify.state || '—'} · ${spotify.assets?.large_text || ''}</span>
-        </div>`;
-      actEl.appendChild(pill);
-    }
-
-    const game = activities.find(a => a.type === 0);
-    if (game) {
-      const pill = document.createElement('div');
-      pill.className = 'activity-pill';
-      pill.innerHTML = `
-        <i class="fa fa-gamepad"></i>
-        <div class="act-detail">
-          <span class="act-title">${game.name}</span>
-          <span class="act-sub">${game.details || 'Playing'}</span>
-        </div>`;
-      actEl.appendChild(pill);
-    }
+  const spotify = activities.find(a => a.name === 'Spotify' || a.id === 'spotify:1');
+  if (spotify && rowSpotify && spotifyText) {
+    spotifyText.textContent = `${spotify.details || 'unknown'} — ${spotify.state || '—'}`;
+    rowSpotify.style.display = 'flex';
+  } else if (rowSpotify) {
+    rowSpotify.style.display = 'none';
   }
 }
 
@@ -303,6 +221,16 @@ function formatTime(secs) {
   return `${m}:${s<10?'0':''}${s}`;
 }
 
+function initLocalTime() {
+  const el = document.getElementById('localTimeSpan');
+  if (!el) return;
+  function tick() {
+    const now = new Date();
+    const opts = { timeZone:'Asia/Riyadh', hour:'2-digit', minute:'2-digit', hour12:true };
+    el.textContent = now.toLocaleTimeString('en-US', opts) + ' AST';
+  }
+  tick(); setInterval(tick, 1000);
+}
 function initEffects() {
   if (window.innerWidth > 700 && cursorGlow) {
     document.addEventListener('mousemove', e => {
@@ -317,13 +245,13 @@ function initEffects() {
 }
 
 function spawnTrail(x, y) {
-  if (Math.random() > 0.35) return;
+  if (Math.random() > 0.12) return;
   const dot = document.createElement('div');
   dot.className = 'trail-dot';
   dot.style.left = x + 'px';
   dot.style.top  = y + 'px';
   document.body.appendChild(dot);
-  setTimeout(() => dot.remove(), 650);
+  setTimeout(() => dot.remove(), 600);
 }
 
 function initEmberField() {
@@ -337,26 +265,25 @@ function initEmberField() {
     h = canvas.height = window.innerHeight;
   });
 
-  const pCount = 35;
+  const pCount = 16;
   const particles = Array.from({ length: pCount }, () => ({
     x: Math.random()*w, y: Math.random()*h+h,
-    r: Math.random()*1.6+0.4,
-    vx: Math.random()*0.4-0.2, vy: Math.random()*-0.8-0.3,
-    alpha: Math.random()*0.5+0.2, fade: Math.random()*0.005+0.002,
+    r: Math.random()*1.2+0.3,
+    vx: Math.random()*0.25-0.12, vy: Math.random()*-0.45-0.18,
+    alpha: Math.random()*0.28+0.08, fade: Math.random()*0.004+0.0015,
   }));
 
   function loop() {
     ctx.clearRect(0, 0, w, h);
-    const rgb = window._emberRGB || { r:145, g:145, b:153 };
     for (const p of particles) {
       p.x += p.vx; p.y += p.vy; p.alpha -= p.fade;
       if (p.alpha <= 0 || p.y < -10 || p.x < -10 || p.x > w+10) {
         p.x = Math.random()*w; p.y = h + Math.random()*20;
-        p.alpha = Math.random()*0.5+0.2;
+        p.alpha = Math.random()*0.28+0.08;
       }
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
-      ctx.fillStyle = `rgba(${rgb.r},${rgb.g},${rgb.b},${p.alpha})`;
+      ctx.fillStyle = `rgba(220,220,220,${p.alpha})`;
       ctx.fill();
     }
     requestAnimationFrame(loop);
@@ -367,6 +294,7 @@ function initEmberField() {
 document.addEventListener('DOMContentLoaded', () => {
   initAudio();
   initEffects();
+  initLocalTime();
   fetchLanyard();
   connectLanyard();
 });
