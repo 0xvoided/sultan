@@ -1,6 +1,6 @@
 const CONFIG = {
-  songTitle:  "Van Gogh",
-  songArtist: "Virginio Aiello",
+  songTitle:  "It's Going Down Now",
+  songArtist: "'Persona",
   discordId: "374351552720142336",
   socials: {
     instagram: "https://instagram.com/throwvoid",
