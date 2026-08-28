@@ -136,18 +136,74 @@
     0%,100%{ opacity:1; }
     50%{ opacity:.3; }
   }
- 
-  .discord-note{
-    margin-top:9px;
-    font-size:16px;
-    font-weight:500;
-    color:var(--text);
-    min-height:20px;
-    opacity:0;
-    transition:opacity .3s ease;
+
+  .discord-mini{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-top:14px;
+    margin-inline-end:auto;
+    width:fit-content;
+    max-width:100%;
+    text-align:start;
+  }
+
+  .mini-avatar-wrap{
+    position:relative;
+    width:64px;
+    height:64px;
+    flex-shrink:0;
+  }
+
+  .mini-avatar-img{
+    width:100%;
+    height:100%;
+    border-radius:50%;
+    object-fit:cover;
+    display:block;
+    box-shadow:0 0 0 2px var(--bg-1);
+  }
+
+  .mini-avatar-wrap .status-dot{
+    position:absolute;
+    right:-2px;
+    bottom:-2px;
+    width:16px;
+    height:16px;
+    margin:0;
+    border:3px solid var(--bg-1);
+    box-sizing:content-box;
+  }
+
+  .mini-text{
+    min-width:0;
+    max-width:280px;
+  }
+
+  .mini-status-label{
+    font-size:11px;
+    font-weight:600;
+    letter-spacing:0.4px;
+    text-transform:uppercase;
+    color:var(--text-dim);
   }
  
-  .discord-note.show{ opacity:1; }
+  .discord-note{
+    margin-top:2px;
+    font-size:15px;
+    font-weight:500;
+    color:var(--text);
+    min-height:0;
+    opacity:0;
+    max-height:0;
+    overflow:hidden;
+    transition:opacity .3s ease;
+    white-space:nowrap;
+    text-overflow:ellipsis;
+    overflow:hidden;
+  }
+ 
+  .discord-note.show{ opacity:1; max-height:20px; }
  
   .activity-panel{
     display:none;
@@ -527,13 +583,33 @@
  
     <div class="ring-wrap">
       <div class="avatar">
-        <img src="avatar.png" alt="">
+        <img id="mainAvatarImg" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%230c0c0c'/%3E%3Ccircle cx='50' cy='38' r='18' fill='%23222'/%3E%3Cellipse cx='50' cy='88' rx='32' ry='24' fill='%23222'/%3E%3C/svg%3E" alt="">
       </div>
     </div>
  
     <div class="identity">
-      <div class="username"><span class="status-dot" id="statusDot"></span>throwvoid</div>
-      <div class="discord-note" id="discordNote"></div>
+      <div class="username">throwvoid</div>
+
+      <div class="discord-mini" id="discordMini">
+        <div class="mini-avatar-wrap">
+          <img class="mini-avatar-img" id="miniAvatarImg" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%230c0c0c'/%3E%3Ccircle cx='50' cy='38' r='18' fill='%23222'/%3E%3Cellipse cx='50' cy='88' rx='32' ry='24' fill='%23222'/%3E%3C/svg%3E" alt="">
+          <span class="status-dot" id="statusDot"></span>
+        </div>
+        <div class="mini-text">
+          <div class="mini-status-label" id="statusLabel">Offline</div>
+          <div class="discord-note" id="discordNote"></div>
+        </div>
+      </div>
+
+      <div class="activity-panel" id="activityPanel">
+        <div class="activity-art" id="activityArt"></div>
+        <div class="activity-info">
+          <div class="activity-kind" id="activityKind"></div>
+          <div class="activity-name" id="activityName"></div>
+          <div class="activity-detail" id="activityDetail"></div>
+        </div>
+      </div>
+
       <div class="badges" id="badges"></div>
       <div class="info-row">
         <div class="info-item">
@@ -547,14 +623,6 @@
         <div class="info-item">
           <svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5.3 7 13 7 13s7-7.7 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"/></svg>
           <span>Unknown</span>
-        </div>
-      </div>
-      <div class="activity-panel" id="activityPanel">
-        <div class="activity-art" id="activityArt"></div>
-        <div class="activity-info">
-          <div class="activity-kind" id="activityKind"></div>
-          <div class="activity-name" id="activityName"></div>
-          <div class="activity-detail" id="activityDetail"></div>
         </div>
       </div>
     </div>
@@ -760,7 +828,10 @@
   document.addEventListener('touchstart', unlockAudio);
  
   const statusDot = document.getElementById('statusDot');
+  const statusLabel = document.getElementById('statusLabel');
   const discordNote = document.getElementById('discordNote');
+  const miniAvatarImg = document.getElementById('miniAvatarImg');
+  const mainAvatarImg = document.getElementById('mainAvatarImg');
   const badgesEl = document.getElementById('badges');
   const activityPanel = document.getElementById('activityPanel');
   const activityArt = document.getElementById('activityArt');
@@ -842,6 +913,20 @@
       const status = json.data.discord_status || 'offline';
       statusDot.classList.remove('online','idle','dnd','offline');
       statusDot.classList.add(status);
+      const STATUS_LABELS = { online:'Online', idle:'Idle', dnd:'Do Not Disturb', offline:'Offline' };
+      statusLabel.textContent = STATUS_LABELS[status] || 'Offline';
+
+      const du = json.data.discord_user;
+      const PLACEHOLDER = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%230c0c0c'/%3E%3Ccircle cx='50' cy='38' r='18' fill='%23222'/%3E%3Cellipse cx='50' cy='88' rx='32' ry='24' fill='%23222'/%3E%3C/svg%3E";
+      if(du && du.avatar){
+        const ext = du.avatar.startsWith('a_') ? 'gif' : 'png';
+        const url = `https://cdn.discordapp.com/avatars/${du.id}/${du.avatar}.${ext}?size=256`;
+        miniAvatarImg.src = url;
+        mainAvatarImg.src = url;
+      } else {
+        miniAvatarImg.src = PLACEHOLDER;
+        mainAvatarImg.src = PLACEHOLDER;
+      }
  
       const activities = json.data.activities || [];
       const custom = activities.find(a => a.type === 4);
@@ -859,6 +944,7 @@
     }catch(e){
       statusDot.classList.remove('online','idle','dnd');
       statusDot.classList.add('offline');
+      statusLabel.textContent = 'Offline';
       discordNote.classList.remove('show');
       activityPanel.classList.remove('show');
       renderBadges(0);
@@ -868,7 +954,6 @@
   updateDiscordStatus();
   setInterval(updateDiscordStatus, 15000);
  
-  // ---- discord id copy ----
   const discordBtn = document.getElementById('discordBtn');
  
   discordBtn.addEventListener('click', async () => {

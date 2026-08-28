@@ -1,6 +1,6 @@
 const CONFIG = {
-  songTitle:  "It's Going Down Now",
-  songArtist: "'Persona",
+  songTitle:  " No One Noticed",
+  songArtist: "'The Marías",
   discordId: "374351552720142336",
   socials: {
     instagram: "https://instagram.com/throwvoid",
