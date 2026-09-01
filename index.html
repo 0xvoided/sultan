@@ -177,33 +177,56 @@
 
   .mini-text{
     min-width:0;
-    max-width:280px;
+    flex:1;
   }
 
-  .mini-status-label{
-    font-size:11px;
-    font-weight:600;
-    letter-spacing:0.4px;
-    text-transform:uppercase;
-    color:var(--text-dim);
+  .mini-name-row{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+
+  .mini-name{
+    font-size:15px;
+    font-weight:700;
+    color:var(--text);
+    letter-spacing:0.2px;
+  }
+
+  .mini-name-row .badges{
+    display:flex;
+    justify-content:flex-start;
+    align-items:center;
+    gap:6px;
+    margin-top:0;
+    flex-wrap:wrap;
+  }
+
+  .mini-name-row .badge{
+    width:20px;
+    height:20px;
+    border-radius:6px;
+  }
+
+  .mini-name-row .badge svg{
+    width:11px;
+    height:11px;
   }
  
   .discord-note{
-    margin-top:2px;
-    font-size:15px;
+    margin-top:3px;
+    font-size:14px;
     font-weight:500;
-    color:var(--text);
-    min-height:0;
+    color:var(--text-dim);
     opacity:0;
-    max-height:0;
-    overflow:hidden;
     transition:opacity .3s ease;
-    white-space:nowrap;
-    text-overflow:ellipsis;
-    overflow:hidden;
+    white-space:normal;
+    overflow-wrap:break-word;
+    word-break:break-word;
   }
  
-  .discord-note.show{ opacity:1; max-height:20px; }
+  .discord-note.show{ opacity:1; }
  
   .activity-panel{
     display:none;
@@ -271,25 +294,32 @@
     display:flex;
     justify-content:center;
     align-items:center;
-    gap:8px;
-    margin-top:12px;
+    gap:10px;
+    margin-top:14px;
     flex-wrap:wrap;
   }
  
   .badge{
-    width:26px;
-    height:26px;
-    border-radius:8px;
+    width:30px;
+    height:30px;
+    border-radius:10px;
     background:rgba(255,255,255,0.04);
     border:1px solid var(--border);
     display:flex;
     align-items:center;
     justify-content:center;
+    transition:transform .2s cubic-bezier(.2,.8,.2,1), border-color .2s ease, background .2s ease;
+  }
+ 
+  .badge:hover{
+    transform:translateY(-2px);
+    border-color:rgba(255,255,255,0.3);
+    background:rgba(255,255,255,0.07);
   }
  
   .badge svg{
-    width:14px;
-    height:14px;
+    width:15px;
+    height:15px;
     fill:var(--text-dim);
   }
  
@@ -305,23 +335,31 @@
   .info-row{
     display:flex;
     justify-content:center;
-    gap:8px;
-    margin-top:14px;
+    gap:10px;
+    margin-top:16px;
     flex-wrap:wrap;
   }
  
   .info-item{
     display:flex;
     align-items:center;
-    gap:6px;
+    gap:7px;
     font-size:12px;
     font-weight:500;
     color:var(--text-dim);
     background:rgba(255,255,255,0.03);
     border:1px solid var(--border);
-    padding:7px 13px;
-    border-radius:10px;
+    padding:8px 14px;
+    border-radius:12px;
     letter-spacing:0.2px;
+    transition:transform .2s cubic-bezier(.2,.8,.2,1), border-color .2s ease, background .2s ease, color .2s ease;
+  }
+ 
+  .info-item:hover{
+    transform:translateY(-2px);
+    border-color:rgba(255,255,255,0.25);
+    background:rgba(255,255,255,0.06);
+    color:var(--text);
   }
  
   .info-item svg{
@@ -365,11 +403,16 @@
     align-items:center;
     justify-content:center;
     flex-shrink:0;
+    width:40px;
+    height:40px;
+    border-radius:12px;
+    background:rgba(255,255,255,0.05);
+    transition:background .25s ease;
   }
  
   .social-btn svg{
-    width:22px;
-    height:22px;
+    width:20px;
+    height:20px;
     fill:currentColor;
   }
  
@@ -386,6 +429,10 @@
     border-color:var(--accent);
     transform:translateX(4px);
     box-shadow:0 14px 30px -10px var(--glow);
+  }
+ 
+  .social-btn:hover .social-icon{
+    background:rgba(0,0,0,0.12);
   }
  
   .social-btn.copied{
@@ -407,6 +454,29 @@
     gap:16px;
   }
  
+  .art-wrap{
+    position:relative;
+    width:44px;
+    height:44px;
+    border-radius:12px;
+    flex-shrink:0;
+    overflow:hidden;
+    background:rgba(255,255,255,0.04);
+    border:1px solid var(--border);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+ 
+  .song-art{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:none;
+  }
+ 
+  .art-wrap.has-art .song-art{ display:block; }
+ 
   .eq{
     display:flex;
     align-items:flex-end;
@@ -415,6 +485,21 @@
     height:20px;
     flex-shrink:0;
   }
+ 
+  .art-wrap.has-art .eq{
+    position:absolute;
+    right:3px;
+    bottom:3px;
+    width:15px;
+    height:12px;
+    gap:2px;
+    padding:3px;
+    border-radius:6px;
+    background:rgba(0,0,0,0.55);
+    box-sizing:content-box;
+  }
+ 
+  .art-wrap.has-art .eq span{ width:2px; }
  
   .eq span{
     display:block;
@@ -553,8 +638,6 @@
     color:rgba(255,255,255,.34);
   }
 
-  .badges{ display:none; }
-
   @media (max-width:480px){
     .page{ padding:20px 14px; }
     .card{ padding:32px 22px 22px; border-radius:20px; }
@@ -596,7 +679,10 @@
           <span class="status-dot" id="statusDot"></span>
         </div>
         <div class="mini-text">
-          <div class="mini-status-label" id="statusLabel">Offline</div>
+          <div class="mini-name-row">
+            <span class="mini-name">throwvoid</span>
+            <div class="badges" id="badges"></div>
+          </div>
           <div class="discord-note" id="discordNote"></div>
         </div>
       </div>
@@ -610,7 +696,6 @@
         </div>
       </div>
 
-      <div class="badges" id="badges"></div>
       <div class="info-row">
         <div class="info-item">
           <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm.75 5v5.4l4.2 2.5-.75 1.25L11 13V7z"/></svg>
@@ -653,7 +738,10 @@
  
     <div class="player" id="player">
       <div class="player-top">
-        <div class="eq"><span></span><span></span><span></span></div>
+        <div class="art-wrap" id="artWrap">
+          <img class="song-art" id="songArt" alt="">
+          <div class="eq"><span></span><span></span><span></span></div>
+        </div>
         <div class="meta">
           <div class="title" id="songTitle">SONG NAME</div>
           <div class="artist" id="songArtist">ARTIST NAME</div>
@@ -680,6 +768,13 @@
 <script>
   document.getElementById('songTitle').textContent  = CONFIG.songTitle;
   document.getElementById('songArtist').textContent = CONFIG.songArtist;
+  if(CONFIG.songArt && CONFIG.songArt.trim()){
+    const songArtImg = document.getElementById('songArt');
+    const artWrapEl = document.getElementById('artWrap');
+    songArtImg.onload = () => artWrapEl.classList.add('has-art');
+    songArtImg.onerror = () => artWrapEl.classList.remove('has-art');
+    songArtImg.src = CONFIG.songArt.trim();
+  }
   document.getElementById('igLink').href = CONFIG.socials.instagram;
   document.getElementById('twLink').href = CONFIG.socials.twitter;
   document.getElementById('ttLink').href = CONFIG.socials.tiktok;
@@ -828,7 +923,6 @@
   document.addEventListener('touchstart', unlockAudio);
  
   const statusDot = document.getElementById('statusDot');
-  const statusLabel = document.getElementById('statusLabel');
   const discordNote = document.getElementById('discordNote');
   const miniAvatarImg = document.getElementById('miniAvatarImg');
   const mainAvatarImg = document.getElementById('mainAvatarImg');
@@ -913,8 +1007,6 @@
       const status = json.data.discord_status || 'offline';
       statusDot.classList.remove('online','idle','dnd','offline');
       statusDot.classList.add(status);
-      const STATUS_LABELS = { online:'Online', idle:'Idle', dnd:'Do Not Disturb', offline:'Offline' };
-      statusLabel.textContent = STATUS_LABELS[status] || 'Offline';
 
       const du = json.data.discord_user;
       const PLACEHOLDER = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%230c0c0c'/%3E%3Ccircle cx='50' cy='38' r='18' fill='%23222'/%3E%3Cellipse cx='50' cy='88' rx='32' ry='24' fill='%23222'/%3E%3C/svg%3E";
@@ -944,7 +1036,6 @@
     }catch(e){
       statusDot.classList.remove('online','idle','dnd');
       statusDot.classList.add('offline');
-      statusLabel.textContent = 'Offline';
       discordNote.classList.remove('show');
       activityPanel.classList.remove('show');
       renderBadges(0);
