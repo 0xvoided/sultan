@@ -5,17 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>throwvoid</title>
 
+<!-- Meta Tags for Link Previews -->
 <meta name="description" content="throwvoid — night owl, one song on repeat. tap in.">
 <meta property="og:type" content="profile">
 <meta property="og:title" content="throwvoid">
 <meta property="og:description" content="night owl running on one song on repeat. tap in.">
-<meta property="og:image" content="https://i.pinimg.com/736x/e6/4f/cb/e64fcbcbb1d1332475097ce908111210.jpg">
-<meta name="twitter:card" content="summary_large_image">
+<meta property="og:image" content="https://i.pinimg.com/736x/61/ac/57/61ac577c9cf5159cd59a10612e09e6a9.jpg">
+
+<meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="throwvoid">
 <meta name="twitter:description" content="night owl running on one song on repeat. tap in.">
-<meta name="twitter:image" content="https://i.pinimg.com/736x/e6/4f/cb/e64fcbcbb1d1332475097ce908111210.jpg">
+<meta name="twitter:image" content="https://i.pinimg.com/736x/61/ac/57/61ac577c9cf5159cd59a10612e09e6a9.jpg">
 <meta name="theme-color" content="#000000">
 
+<!-- Favicon Icon -->
 <link id="siteFavicon" rel="icon" type="image/x-icon" href="https://i.pinimg.com/736x/61/ac/57/61ac577c9cf5159cd59a10612e09e6a9.jpg">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -881,7 +884,6 @@
     const sideArt = document.getElementById('sideSongArt');
     const sidePlaceholder = document.getElementById('sideArtPlaceholder');
 
-    // Spotify status update
     if(spotify) {
       sideBadge.classList.remove('idle');
       document.getElementById('sideSongTitle').textContent = spotify.song;
@@ -899,7 +901,6 @@
       sidePlaceholder.style.display = 'flex';
     }
 
-    // Discord status / Games update
     const oldImg = presenceBox.querySelector('.presence-img');
     if(oldImg) oldImg.remove();
     presenceIcon.style.display = 'flex';
@@ -948,7 +949,6 @@
         
         mainAvatarImg.src = avatarUrl;
 
-        // تحديث أيقونة التبويب (Favicon) تلقائياً بصورة البروفايل في ديسكورد
         const favicon = document.getElementById('siteFavicon');
         if(favicon) {
           favicon.href = avatarUrl;
