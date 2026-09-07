@@ -1,7 +1,7 @@
 const CONFIG = {
-  songTitle:  "We never dated",
-  songArtist: "'Sombr",
-  songArt: "https://i.pinimg.com/736x/e6/4f/cb/e64fcbcbb1d1332475097ce908111210.jpg",
+  songTitle:  "Spiracle",
+  songArtist: "Flower Face",
+  songArt: "https://i.pinimg.com/1200x/58/47/0c/58470c5384c13dcca91439a6eda33dc7.jpg",
   discordId: "374351552720142336",
   socialUrl: "https://discord.com/users/374351552720142336",
   badges: {
