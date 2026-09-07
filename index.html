@@ -19,7 +19,7 @@
 <meta name="theme-color" content="#000000">
 
 <!-- Favicon Icon -->
-<link id="siteFavicon" rel="icon" type="image/x-icon" href="https://i.pinimg.com/736x/61/ac/57/61ac577c9cf5159cd59a10612e09e6a9.jpg">
+<link id="siteFavicon" rel="icon" type="image/x-icon" href="https://i.pinimg.com/736x/61/ac/57/61ac577c9cf5159cd59a10612e09e6a9.jpg" sizes="16x16">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -948,11 +948,6 @@
         const avatarUrl = `https://cdn.discordapp.com/avatars/${du.id}/${du.avatar}.${ext}?size=256`;
         
         mainAvatarImg.src = avatarUrl;
-
-        const favicon = document.getElementById('siteFavicon');
-        if(favicon) {
-          favicon.href = avatarUrl;
-        }
       } else {
         mainAvatarImg.src = PLACEHOLDER;
       }
