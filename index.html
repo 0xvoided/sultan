@@ -289,6 +289,13 @@
     background: currentColor;
     box-shadow: 0 0 6px currentColor;
   }
+  #activityTagTime {
+    opacity: 0.75;
+    font-weight: 600;
+  }
+  #activityTagTime:not(:empty)::before {
+    content: "· ";
+  }
   .activity-title {
     font-size: 15px;
     font-weight: 600;
@@ -687,7 +694,7 @@
         <div class="activity-eq" id="activityEq"><span></span><span></span><span></span></div>
       </div>
       <div class="activity-details">
-        <div class="activity-tag" id="activityTag"><span class="activity-tag-dot"></span><span id="activityTagText">SPOTIFY</span></div>
+        <div class="activity-tag" id="activityTag"><span class="activity-tag-dot"></span><span id="activityTagText">SPOTIFY</span><span id="activityTagTime"></span></div>
         <div class="activity-title" id="activityTitle">---</div>
       </div>
     </div>
@@ -972,6 +979,40 @@
   }
 
   let latestData = null;
+  let activityStart = null;
+  let activityEnd = null;
+  let activityTimerInterval = null;
+
+  function formatElapsed(ms) {
+    if (ms < 0) ms = 0;
+    const totalSec = Math.floor(ms / 1000);
+    const h = Math.floor(totalSec / 3600);
+    const m = Math.floor((totalSec % 3600) / 60);
+    const s = totalSec % 60;
+    const pad = (n) => String(n).padStart(2, '0');
+    return h > 0 ? `${h}:${pad(m)}:${pad(s)}` : `${m}:${pad(s)}`;
+  }
+
+  function tickActivityTime() {
+    const activityTagTime = document.getElementById('activityTagTime');
+    if (!activityTagTime) return;
+    if (!activityStart) {
+      activityTagTime.textContent = '';
+      return;
+    }
+    const now = Date.now();
+    if (activityEnd && now >= activityEnd) {
+      activityTagTime.textContent = formatElapsed(activityEnd - activityStart);
+      return;
+    }
+    activityTagTime.textContent = formatElapsed(now - activityStart);
+  }
+
+  function startActivityTimer() {
+    if (activityTimerInterval) clearInterval(activityTimerInterval);
+    tickActivityTime();
+    activityTimerInterval = setInterval(tickActivityTime, 1000);
+  }
 
   function updateActivityDisplay() {
     const activityCard = document.getElementById('activityCard');
@@ -1002,6 +1043,9 @@
       activityTitle.textContent = spotify.song;
       activitySub.textContent = spotify.artist;
       activityEq.style.display = 'flex';
+      activityStart = (spotify.timestamps && spotify.timestamps.start) || spotify.created_at || null;
+      activityEnd = (spotify.timestamps && spotify.timestamps.end) || null;
+      startActivityTimer();
     } else if (game) {
       activityCard.style.display = 'inline-flex';
       let imgUrl = null;
@@ -1021,6 +1065,9 @@
       activityTitle.textContent = game.name;
       activitySub.textContent = game.details || game.state || 'In game';
       activityEq.style.display = 'none';
+      activityStart = (game.timestamps && game.timestamps.start) || game.created_at || null;
+      activityEnd = (game.timestamps && game.timestamps.end) || null;
+      startActivityTimer();
     } else {
       activityCard.style.display = 'inline-flex';
       activityThumb.style.display = 'none';
@@ -1030,6 +1077,11 @@
       activityTitle.textContent = 'not playing';
       activitySub.textContent = 'waiting for me to play a song';
       activityEq.style.display = 'none';
+      activityStart = null;
+      activityEnd = null;
+      if (activityTimerInterval) clearInterval(activityTimerInterval);
+      const activityTagTime = document.getElementById('activityTagTime');
+      if (activityTagTime) activityTagTime.textContent = '';
     }
   }
 
