@@ -1,7 +1,7 @@
 const CONFIG = {
-  songTitle: "i saw your face",
-  songArtist: "malcolm todd",
-  songArt: "https://i.pinimg.com/736x/13/aa/54/13aa5453cfd087ce194622481aeab948.jpg",
+  songTitle: "About A Girl",
+  songArtist: "Nirvana",
+  songArt: "https://i.pinimg.com/736x/e3/bd/50/e3bd50c85abb33172e4047de531cdf7b.jpg",
   discordId: "1254501331130126347",
   socialUrl: "https://discord.com/users/1254501331130126347",
   socials: {
