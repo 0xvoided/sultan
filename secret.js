@@ -1,7 +1,7 @@
 const CONFIG = {
-  songTitle: "About A Girl",
-  songArtist: "Nirvana",
-  songArt: "https://i.pinimg.com/736x/e3/bd/50/e3bd50c85abb33172e4047de531cdf7b.jpg",
+  songTitle: "Spiracle",
+  songArtist: "Flower Face",
+  songArt: "https://i.pinimg.com/736x/7e/15/d1/7e15d1d780ef7d395e366fbad10223c8.jpg",
   discordId: "1254501331130126347",
   socialUrl: "https://discord.com/users/1254501331130126347",
   socials: {
