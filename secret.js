@@ -7,6 +7,6 @@ const CONFIG = {
   socials: {
     instagram: "https://instagram.com/throwvoid",
     twitter: "https://x.com/sultanwqr",
-    tiktok: "https://tiktok.com/@0xvoidedd"
+    tiktok: "https://tiktok.com/@throwvoid"
   }
 };
