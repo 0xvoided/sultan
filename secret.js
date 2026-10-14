@@ -6,7 +6,7 @@ const CONFIG = {
   socialUrl: "https://discord.com/users/1254501331130126347",
   socials: {
     instagram: "https://instagram.com/throwvoid",
-    twitter: "https://x.com/sultanwqr",
+    twitter: "https://x.com/Hexadecimalty",
     tiktok: "https://tiktok.com/@throwvoid"
   }
 };
