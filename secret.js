@@ -1,7 +1,7 @@
 const CONFIG = {
-  songTitle: "Monsoon",
-  songArtist: "Tokio Hotel",
-  songArt: "https://i.pinimg.com/736x/3e/fe/06/3efe06fb8e4a20d9c92c901bc018c193.jpg",
+  songTitle: "You're not the same",
+  songArtist: "diedlonely, Etsu",
+  songArt: "https://i.pinimg.com/736x/6e/d4/95/6ed4952a0ace074c0a29e5e0fd32742a.jpg",
   discordId: "1254501331130126347",
   socialUrl: "https://discord.com/users/1254501331130126347",
   socials: {

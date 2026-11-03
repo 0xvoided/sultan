@@ -15,7 +15,7 @@
 <meta name="twitter:title" content="throwvoid">
 <meta name="twitter:description" content="somewhere between midnight thoughts and endless echoes. drifting through the void.">
 <meta name="twitter:image" content="https://i.pinimg.com/736x/0a/56/db/0a56db4bb6a2805d3e78582c1b62dad5.jpg">
-<meta name="theme-color" content="#09090b">
+<meta name="theme-color" content="#000000">
 
 <link id="siteFavicon" rel="icon" type="image/x-icon" href="https://i.pinimg.com/736x/61/ac/57/61ac577c9cf5159cd59a10612e09e6a9.jpg" sizes="16x16">
 
@@ -25,9 +25,10 @@
 
 <style>
   :root{
-    --void:#050506;
-    --accent:#ffffff;
-    --tint:#0c0c0f;
+    --void:#000000;
+    --accent:#d4d4d8;
+    --tint:#161617;
+    --state:#50fa7b;
     --panel:rgba(255,255,255,0.055);
     --panel-hover:rgba(255,255,255,0.09);
     --line:rgba(255,255,255,0.09);
@@ -75,7 +76,148 @@
 
   .ambient-glow{
     position:fixed; inset:0; z-index:2; pointer-events:none;
-    background:radial-gradient(520px circle at var(--x, 50%) var(--y, 50%), rgba(255,255,255,0.05), transparent 70%);
+    background:radial-gradient(420px circle at var(--x, 50%) var(--y, 50%), rgba(255,255,255,0.06), transparent 70%);
+  }
+
+  /* fog */
+  .fog{
+    position:fixed; inset:-20%; z-index:2; pointer-events:none; opacity:.5;
+    background:
+      radial-gradient(40% 30% at 20% 70%, rgba(255,255,255,.05), transparent 70%),
+      radial-gradient(45% 35% at 80% 30%, rgba(255,255,255,.04), transparent 70%),
+      radial-gradient(35% 25% at 50% 100%, rgba(255,255,255,.04), transparent 70%);
+    animation:fogdrift 38s ease-in-out infinite alternate;
+    filter:blur(30px);
+  }
+  @keyframes fogdrift{
+    0%{ transform:translate3d(-4%,2%,0) scale(1); }
+    100%{ transform:translate3d(5%,-3%,0) scale(1.15); }
+  }
+
+  /* slow heartbeat vignette */
+  .pulse{
+    position:fixed; inset:0; z-index:3; pointer-events:none;
+    background:radial-gradient(ellipse at 50% 50%, transparent 35%, rgba(0,0,0,.85) 100%);
+    animation:breathe 7s ease-in-out infinite;
+  }
+  @keyframes breathe{ 0%,100%{ opacity:.7; } 50%{ opacity:1; } }
+
+  /* lightning flash */
+  .flash{
+    position:fixed; inset:0; z-index:3; pointer-events:none; opacity:0;
+    background:radial-gradient(ellipse at 60% 0%, rgba(255,255,255,.10), transparent 70%);
+  }
+  .flash.go{ animation:flash 1.1s ease-out; }
+  @keyframes flash{
+    0%{opacity:0;} 6%{opacity:1;} 14%{opacity:.15;} 22%{opacity:.7;} 100%{opacity:0;}
+  }
+
+  /* "you're not the same": a ghost of the avatar that drifts apart */
+  .avatar-ghost{
+    position:absolute; inset:0; border-radius:50%; overflow:hidden;
+    opacity:.35; filter:grayscale(1) blur(1px) contrast(1.2);
+    mix-blend-mode:screen;
+    animation:ghost 6s ease-in-out infinite;
+    pointer-events:none;
+  }
+  .avatar-ghost img{ width:100%; height:100%; object-fit:cover; display:block; }
+  @keyframes ghost{
+    0%,100%{ transform:translate(0,0); opacity:.0; }
+    40%{ transform:translate(-14px,3px); opacity:.35; }
+    55%{ transform:translate(-18px,4px); opacity:.25; }
+    70%{ transform:translate(6px,-2px); opacity:.1; }
+  }
+  .avatar-ring img{ filter:grayscale(.55) contrast(1.05) brightness(.92); }
+  .avatar-ring:hover img{ filter:grayscale(0) brightness(1); }
+
+  /* name with a broken echo */
+  .name{ position:relative; display:inline-block; }
+  .name::before,.name::after{
+    content:attr(data-text);
+    position:absolute; left:0; top:0; width:100%;
+    pointer-events:none; opacity:0;
+  }
+  .name::before{ color:#b47cff; mix-blend-mode:screen; animation:glitchA 7s infinite; }
+  .name::after{ color:#50fa7b; mix-blend-mode:screen; animation:glitchB 7s infinite; }
+  .name.hit::before{ animation:glitchFast .28s steps(2) infinite; }
+  .name.hit::after{ animation:glitchFast .22s steps(2) infinite reverse; }
+  @keyframes glitchFast{
+    0%{ opacity:.85; transform:translate(-4px,1px); }
+    50%{ opacity:.55; transform:translate(4px,-1px); }
+    100%{ opacity:.85; transform:translate(-2px,2px); }
+  }
+  @keyframes glitchA{
+    0%,90%,100%{ opacity:0; transform:translate(0); }
+    92%{ opacity:.8; transform:translate(-3px,1px); }
+    95%{ opacity:.6; transform:translate(2px,-1px); }
+  }
+  @keyframes glitchB{
+    0%,91%,100%{ opacity:0; transform:translate(0); }
+    93%{ opacity:.8; transform:translate(3px,-1px); }
+    96%{ opacity:.5; transform:translate(-2px,1px); }
+  }
+  .name{ animation:flicker 9s infinite; }
+  @keyframes flicker{
+    0%,18%,22%,62%,64%,100%{ opacity:1; }
+    20%,63%{ opacity:.35; }
+  }
+
+  .whisper{
+    margin-top:10px;
+    font-family:var(--mono);
+    font-size:12px; letter-spacing:.14em;
+    color:var(--ink-faint);
+    min-height:16px;
+    transition:opacity 1.2s ease;
+  }
+  .whisper.out{ opacity:0; }
+
+  .avatar-ring{
+    border-color:color-mix(in srgb, var(--state) 60%, transparent);
+    box-shadow:0 18px 50px -12px rgba(0,0,0,.9), 0 0 0 6px rgba(255,255,255,0.03), 0 0 28px -6px var(--state);
+    transition:border-color .25s ease, box-shadow .25s ease;
+  }
+
+  /* circle glitch: light color flicker around the avatar */
+  .avatar-wrap.glitching .avatar-ring{
+    transition:none;
+    animation:ringglitch .22s steps(2) infinite;
+  }
+  .avatar-wrap.glitching .avatar-ring img{
+    animation:imgtint .3s steps(3) infinite;
+  }
+  @keyframes ringglitch{
+    0%{ transform:translate(-2px,0); }
+    50%{ transform:translate(2px,1px); }
+    100%{ transform:translate(0,-1px); }
+  }
+  @keyframes imgtint{
+    0%{ filter:grayscale(.55) hue-rotate(0deg) brightness(.95); }
+    33%{ filter:grayscale(.2) hue-rotate(40deg) brightness(1.08); }
+    66%{ filter:grayscale(.4) hue-rotate(-40deg) brightness(.9); }
+    100%{ filter:grayscale(.55) hue-rotate(0deg) brightness(.95); }
+  }
+
+  /* fake system status that keeps changing */
+  .sys{
+    display:inline-flex; align-items:center; justify-content:center;
+    margin-top:6px;
+  }
+  .name-row{ display:flex; align-items:center; justify-content:center; gap:12px; }
+  #sysText{ display:none; }
+  .sys-dot{
+    width:10px; height:10px; border-radius:50%;
+    background:var(--state);
+    box-shadow:0 0 10px var(--state);
+    animation:sysblink 1.6s ease-in-out infinite;
+  }
+  @keyframes sysblink{ 0%,100%{ opacity:1; } 50%{ opacity:.25; } }
+  .sys.glitch{ animation:sysjit .12s steps(2) infinite; }
+  .sys.error .sys-dot{ animation-duration:.4s; }
+  @keyframes sysjit{
+    0%{ transform:translate(-2px,0); }
+    50%{ transform:translate(2px,1px); }
+    100%{ transform:translate(0,-1px); }
   }
 
   .grain{
@@ -477,6 +619,129 @@
     .player-card{ padding:12px 14px; }
   }
 
+  /* no effects on name / avatar */
+  .name{ animation:none; }
+  .name::before,.name::after{ display:none; }
+  .avatar-ghost{ display:none; }
+  .avatar-ring img,
+  .avatar-ring:hover img,
+  .avatar-wrap.glitching .avatar-ring img{ filter:none; animation:none; }
+  .avatar-ring,
+  .avatar-wrap.glitching .avatar-ring{
+    animation:none;
+    border-color:var(--line-strong);
+    box-shadow:0 18px 50px -12px rgba(0,0,0,.9), 0 0 0 6px rgba(255,255,255,0.03);
+  }
+
+  /* flat black, no glow / bloom / lighting */
+  .fog,.ambient-glow,.flash,.pulse,.grain,.bg::after{ display:none; }
+  .bg{ background:#000; }
+  .status-dot.online,.status-dot.idle,.status-dot.dnd{ box-shadow:none; }
+  .sys-dot{ box-shadow:none; }
+  .avatar-ring,
+  .avatar-wrap.glitching .avatar-ring{ box-shadow:none; }
+  .player-card{ box-shadow:none; }
+
+  /* bigger status dot, steady (no blinking), slash sweep on change */
+  .sys-dot{
+    width:16px; height:16px;
+    position:relative; overflow:hidden;
+    animation:none; box-shadow:none;
+  }
+  .sys.error .sys-dot{ animation:none; }
+  .sys-dot.slash{ animation:dotpop .4s ease-out; }
+  .sys-dot.slash::after{
+    content:""; position:absolute;
+    top:-60%; left:-70%;
+    width:55%; height:220%;
+    background:#fff;
+    transform:translateX(0) rotate(28deg);
+    animation:slashmove .38s ease-out forwards;
+  }
+  @keyframes slashmove{
+    0%{ transform:translateX(0) rotate(28deg); opacity:.95; }
+    100%{ transform:translateX(420%) rotate(28deg); opacity:.2; }
+  }
+  @keyframes dotpop{
+    0%{ transform:scale(1); }
+    35%{ transform:scale(1.3); }
+    100%{ transform:scale(1); }
+  }
+
+  /* smaller dot, shake + static distortion on change */
+  .sys-dot{ width:13px; height:13px; }
+  .sys-dot.slash{ animation:dotglitch .55s steps(1) 1; }
+  .sys-dot.slash::after{
+    top:0; left:0; width:100%; height:100%;
+    background:repeating-linear-gradient(0deg, rgba(0,0,0,.75) 0 2px, transparent 2px 4px);
+    transform:none; opacity:1;
+    animation:dotstatic .55s steps(1) 1 forwards;
+  }
+  @keyframes dotglitch{
+    0%{ transform:translate(-3px,0) skewX(25deg) scaleX(1.4); }
+    10%{ transform:translate(3px,1px) skewX(-25deg) scaleX(.7); }
+    20%{ transform:translate(-2px,-2px) scale(1.3,.6); }
+    30%{ transform:translate(4px,0) skewX(30deg); }
+    40%{ transform:translate(-4px,1px) scaleX(1.5); }
+    50%{ transform:translate(2px,-1px) skewX(-20deg); }
+    60%{ transform:translate(-2px,2px) scale(.8,1.3); }
+    72%{ transform:translate(3px,0) skewX(15deg); }
+    85%{ transform:translate(-1px,0) scaleX(1.15); }
+    100%{ transform:none; }
+  }
+  @keyframes dotstatic{
+    0%{ background-position:0 0; opacity:1; }
+    25%{ background-position:0 2px; opacity:.9; }
+    50%{ background-position:0 1px; opacity:1; }
+    75%{ background-position:0 3px; opacity:.7; }
+    100%{ background-position:0 0; opacity:0; }
+  }
+
+  /* weird tear: dot slices slide left/right out of sync + side-to-side wobble */
+  .sys-dot{ overflow:visible; }
+  .sys-dot.slash{ animation:dotwobble .65s steps(1) 1; }
+  .sys-dot.slash::before,
+  .sys-dot.slash::after{
+    content:""; position:absolute;
+    top:0; left:0; width:100%; height:100%;
+    border-radius:50%;
+    background:var(--state);
+    opacity:1; transform:none;
+  }
+  .sys-dot.slash::before{ clip-path:inset(0 0 58% 0); animation:sliceL .65s steps(1) 1; }
+  .sys-dot.slash::after{ clip-path:inset(42% 0 0 0); animation:sliceR .65s steps(1) 1 forwards; }
+  @keyframes dotwobble{
+    0%{ transform:translateX(-5px) scaleX(1.5); }
+    12%{ transform:translateX(5px) scaleX(.6); }
+    24%{ transform:translateX(-4px) skewX(30deg); }
+    36%{ transform:translateX(6px) scaleX(1.3); }
+    48%{ transform:translateX(-6px) skewX(-30deg); }
+    60%{ transform:translateX(3px) scaleX(.7); }
+    75%{ transform:translateX(-2px) skewX(15deg); }
+    100%{ transform:none; }
+  }
+  @keyframes sliceL{
+    0%{ transform:translateX(-9px); }
+    15%{ transform:translateX(7px); }
+    30%{ transform:translateX(-6px); }
+    45%{ transform:translateX(10px); }
+    60%{ transform:translateX(-4px); }
+    80%{ transform:translateX(3px); }
+    100%{ transform:none; }
+  }
+  @keyframes sliceR{
+    0%{ transform:translateX(9px); }
+    15%{ transform:translateX(-8px); }
+    30%{ transform:translateX(6px); }
+    45%{ transform:translateX(-10px); }
+    60%{ transform:translateX(5px); }
+    80%{ transform:translateX(-3px); }
+    100%{ transform:none; }
+  }
+
+  /* status dot removed */
+  .sys{ display:none !important; }
+
   @media (prefers-reduced-motion: reduce){
     *{ animation-duration:.01ms !important; transition-duration:.01ms !important; }
   }
@@ -486,7 +751,10 @@
 
 <div class="bg"></div>
 <canvas id="spaceCanvas"></canvas>
+<div class="fog"></div>
 <div class="ambient-glow"></div>
+<div class="flash" id="flash"></div>
+<div class="pulse"></div>
 <div class="grain"></div>
 
 <div class="main-card">
@@ -494,10 +762,15 @@
     <div class="avatar-ring">
       <img id="mainAvatarImg" src="https://i.pinimg.com/736x/0a/56/db/0a56db4bb6a2805d3e78582c1b62dad5.jpg" alt="throwvoid">
     </div>
+    <div class="avatar-ghost"><img id="ghostAvatarImg" src="https://i.pinimg.com/736x/0a/56/db/0a56db4bb6a2805d3e78582c1b62dad5.jpg" alt=""></div>
     <span class="status-dot" id="statusDot"></span>
   </div>
 
-  <h1 class="name">throwvoid</h1>
+  <div class="name-row">
+    <h1 class="name" data-text="throwvoid">throwvoid</h1>
+    <div class="sys" id="sys"><span class="sys-dot"></span><span id="sysText"></span></div>
+  </div>
+  <p class="whisper" id="whisper">you're not the same.</p>
 
   <div class="discord-note" id="discordNote">
     <span class="note-icon" id="noteIcon"></span>
@@ -598,51 +871,188 @@
     document.documentElement.style.setProperty('--y', `${e.clientY}px`);
   }, { passive: true });
 
-  (function initSpace(){
+  // rain + dust + ripples, the cursor makes drops glow nearby
+  (function initRain(){
     const canvas = document.getElementById('spaceCanvas');
     const ctx = canvas.getContext('2d');
-    let stars = [];
-    const count = 70;
+    canvas.style.opacity = 1;
+    let W = 0, H = 0;
+    const mobile = window.innerWidth < 700;
+    const DROPS = mobile ? 18 : 34;
+    const DUST = mobile ? 14 : 24;
+    let drops = [], dust = [], ripples = [];
+    let mx = -9999, my = -9999;
+    window.addEventListener('pointermove', e => { mx = e.clientX; my = e.clientY; }, { passive:true });
 
     function resize(){
       const dpr = window.devicePixelRatio || 1;
-      canvas.width = window.innerWidth * dpr;
-      canvas.height = window.innerHeight * dpr;
+      W = window.innerWidth; H = window.innerHeight;
+      canvas.width = W * dpr; canvas.height = H * dpr;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
     window.addEventListener('resize', resize);
     resize();
 
-    for(let i=0; i<count; i++){
-      stars.push({
-        x: Math.random() * window.innerWidth,
-        y: Math.random() * window.innerHeight,
-        size: Math.random() * 1 + 0.3,
-        alpha: Math.random() * 0.5,
-        speed: Math.random() * 0.01 + 0.003
-      });
+    function newDrop(top){
+      return {
+        x: Math.random() * (W + 80) - 40,
+        y: top ? -Math.random() * 60 : Math.random() * H,
+        len: Math.random() * 16 + 8,
+        v: Math.random() * 7 + 9,
+        a: Math.random() * 0.08 + 0.025
+      };
+    }
+    for(let i=0;i<DROPS;i++) drops.push(newDrop(false));
+    for(let i=0;i<DUST;i++){
+      dust.push({ x:Math.random()*W, y:Math.random()*H, r:Math.random()*1.1+.3,
+        a:Math.random()*.4, da:(Math.random()*.006+.002), vy:-(Math.random()*.15+.03) });
     }
 
-    let isVisible = true;
+    let visible = true;
     document.addEventListener('visibilitychange', () => {
-      isVisible = !document.hidden;
-      if(isVisible) requestAnimationFrame(draw);
+      visible = !document.hidden;
+      if(visible) requestAnimationFrame(draw);
     });
 
+    const WIND = -2.2;
     function draw(){
-      if(!isVisible) return;
-      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-      for(let s of stars){
-        s.alpha += s.speed;
-        if(s.alpha > 0.5 || s.alpha < 0) s.speed = -s.speed;
-        ctx.fillStyle = `rgba(255, 255, 255, ${Math.abs(s.alpha)})`;
+      if(!visible) return;
+      ctx.clearRect(0,0,W,H);
+
+      for(const d of dust){
+        d.a += d.da; if(d.a > .45 || d.a < 0) d.da = -d.da;
+        d.y += d.vy; if(d.y < -5){ d.y = H + 5; d.x = Math.random()*W; }
+        ctx.fillStyle = `rgba(220,220,225,${Math.abs(d.a) * .8})`;
+        ctx.beginPath(); ctx.arc(d.x, d.y, d.r, 0, 6.2832); ctx.fill();
+      }
+
+      ctx.lineWidth = 1;
+      ctx.lineCap = 'round';
+      for(const p of drops){
+        const dx = p.x - mx, dy = p.y - my;
+        const near = Math.max(0, 1 - Math.sqrt(dx*dx + dy*dy) / 220);
+        const alpha = p.a;
+        ctx.strokeStyle = `rgba(210,210,215,${alpha})`;
         ctx.beginPath();
-        ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.moveTo(p.x, p.y);
+        ctx.lineTo(p.x + WIND * p.len / 14, p.y + p.len);
+        ctx.stroke();
+        p.x += WIND * p.v / 14;
+        p.y += p.v;
+        if(p.y > H){
+          if(Math.random() < .08 && ripples.length < 8){
+            ripples.push({ x:p.x, y:H - 2 - Math.random()*14, r:1, a:.18 });
+          }
+          Object.assign(p, newDrop(true));
+        }
+      }
+
+      for(let i = ripples.length - 1; i >= 0; i--){
+        const r = ripples[i];
+        r.r += .7; r.a -= .008;
+        if(r.a <= 0){ ripples.splice(i,1); continue; }
+        ctx.strokeStyle = `rgba(210,210,215,${r.a})`;
+        ctx.beginPath(); ctx.ellipse(r.x, r.y, r.r*2.4, r.r*.7, 0, 0, 6.2832); ctx.stroke();
       }
       requestAnimationFrame(draw);
     }
     draw();
+  })();
+
+  // distant lightning, rare and quiet
+  (function lightning(){
+    const f = document.getElementById('flash');
+    function strike(){
+      f.classList.remove('go'); void f.offsetWidth; f.classList.add('go');
+      setTimeout(strike, 14000 + Math.random() * 26000);
+    }
+    setTimeout(strike, 9000);
+  })();
+
+  // lines that fade in and out under the name
+  (function whispers(){
+    const lines = [
+      "you're not the same.",
+      "still here. you're not.",
+      "the rain remembers.",
+      "i kept the light on.",
+      "who left first?",
+      "somewhere between then and now.",
+      "drifting through the void."
+    ];
+    const el = document.getElementById('whisper');
+    let i = 0;
+    setInterval(() => {
+      el.classList.add('out');
+      setTimeout(() => {
+        i = (i + 1) % lines.length;
+        el.textContent = lines[i];
+        el.classList.remove('out');
+      }, 1300);
+    }, 6500);
+  })();
+
+  // status that never settles: online / error / glitching / signal lost...
+  (function statusLoop(){
+    const root = document.documentElement;
+    const sys = document.getElementById('sys');
+    const txt = document.getElementById('sysText');
+    const name = document.querySelector('.name');
+    const states = [
+      { t:'status: online',      c:'#50fa7b', w:[3500, 7000], cls:'' },
+      { t:'status: online',      c:'#50fa7b', w:[3500, 7000], cls:'' },
+      { t:'error: not the same', c:'#b47cff', w:[1800, 3200], cls:'error', hit:true },
+      { t:'err_void_0x01',       c:'#b47cff', w:[1500, 2500], cls:'error', hit:true },
+      { t:'glitching',           c:'#ffb86c', w:[1400, 2400], cls:'glitch', hit:true, scramble:true },
+      { t:'signal lost',         c:'#6b6b72', w:[2200, 4000], cls:'' },
+      { t:'reconnecting...',     c:'#ffb86c', w:[1800, 3000], cls:'' },
+      { t:'offline',             c:'#5a5a60', w:[2000, 3500], cls:'' }
+    ];
+    const noise = '#$%&@!?/\\<>[]{}01xX';
+    let idx = -1, scrambleTimer = null, colorTimer = null;
+
+    function rnd(a, b){ return a + Math.random() * (b - a); }
+
+    function apply(s){
+      clearInterval(scrambleTimer); clearInterval(colorTimer);
+      const dotEl = document.querySelector('.sys-dot');
+      dotEl.classList.remove('slash'); void dotEl.offsetWidth; dotEl.classList.add('slash');
+      sys.className = 'sys ' + s.cls;
+      root.style.setProperty('--state', s.c);
+      name.classList.toggle('hit', !!s.hit);
+      document.querySelector('.avatar-wrap').classList.toggle('glitching', !!s.scramble);
+      if (s.scramble) {
+        const palette = ['#ffb86c', '#b47cff', '#50fa7b', '#ffffff'];
+        scrambleTimer = setInterval(() => {
+          txt.textContent = s.t.split('').map(ch =>
+            Math.random() < .45 ? noise[Math.floor(Math.random() * noise.length)] : ch
+          ).join('');
+        }, 70);
+        colorTimer = setInterval(() => {
+          root.style.setProperty('--state', palette[Math.floor(Math.random() * palette.length)]);
+        }, 110);
+      } else {
+        txt.textContent = s.t;
+      }
+    }
+
+    function next(){
+      let n;
+      do { n = Math.floor(Math.random() * states.length); } while (n === idx);
+      idx = n;
+      const s = states[n];
+      apply(s);
+      setTimeout(next, rnd(s.w[0], s.w[1]));
+    }
+    next();
+  })();
+
+  // the tab misses you
+  (function tabTitle(){
+    const base = 'throwvoid';
+    document.addEventListener('visibilitychange', () => {
+      document.title = document.hidden ? 'come back.' : base;
+    });
   })();
 
   if (typeof CONFIG !== 'undefined') {
@@ -983,6 +1393,8 @@
 
         if (mainAvatarImg.src !== avatarUrl) {
           mainAvatarImg.src = avatarUrl;
+          const g = document.getElementById('ghostAvatarImg');
+          if (g) g.src = avatarUrl;
         }
 
         const favicon = document.getElementById('siteFavicon');
