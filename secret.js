@@ -1,7 +1,7 @@
 const CONFIG = {
-  songTitle: "You're not the same",
-  songArtist: "diedlonely, Etsu",
-  songArt: "https://i.pinimg.com/736x/6e/d4/95/6ed4952a0ace074c0a29e5e0fd32742a.jpg",
+  songTitle: "cardigan",
+  songArtist: "taylor swift",
+  songArt: "https://i.pinimg.com/736x/e7/b0/22/e7b022a7bd2664d160a6af52a97e4e33.jpg",
   discordId: "1254501331130126347",
   socialUrl: "https://discord.com/users/1254501331130126347",
   socials: {
